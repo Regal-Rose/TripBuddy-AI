@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>TripBuddy AI - Your Travel Companion</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <style>
+    body { font-family: 'Segoe UI', system-ui, sans-serif; }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+    .gradient-header {
+      background: linear-gradient(135deg, #4f46e5, #7c3aed);
+    }
+    .card-hover:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-br from-indigo-50 via-white to-purple-50 h-full">
+
+<div class="max-w-6xl mx-auto p-6">
+  <!-- Header -->
+  <div class="text-center mb-10">
+    <div class="inline-flex items-center gap-3 bg-white rounded-3xl px-6 py-2 shadow mb-4">
+      <span class="text-5xl">🌍</span>
+      <h1 class="text-5xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+        TripBuddy AI
+      </h1>
+    </div>
+    <p class="text-xl text-gray-600">Your Intelligent Real-time Travel Companion</p>
+  </div>
+
+  <!-- Configuration -->
+  <div class="bg-white rounded-3xl shadow-xl p-8 mb-10 card-hover">
+    <h2 class="text-2xl font-semibold mb-6 flex items-center gap-3">
+      <i class="fas fa-cog text-indigo-600"></i> Azure Services Configuration
+    </h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div>
+        <label class="block text-sm font-medium mb-1">Computer Vision Endpoint</label>
+        <input id="vision_endpoint" type="text" class="w-full border rounded-2xl px-4 py-3 text-sm" placeholder="https://your-resource.cognitiveservices.azure.com/"/>
+      </div>
+      <div>
+        <label class="block text-sm font-medium mb-1">Computer Vision Key</label>
+        <input id="vision_key" type="password" class="w-full border rounded-2xl px-4 py-3 text-sm"/>
+      </div>
+      <div>
+        <label class="block text-sm font-medium mb-1">Translator Key</label>
+        <input id="translator_key" type="password" class="w-full border rounded-2xl px-4 py-3 text-sm"/>
+      </div>
+      <div>
+        <label class="block text-sm font-medium mb-1">Speech Key</label>
+        <input id="speech_key" type="password" class="w-full border rounded-2xl px-4 py-3 text-sm"/>
+      </div>
+      <div>
+        <label class="block text-sm font-medium mb-1">Speech Region</label>
+        <input id="speech_region" type="text" class="w-full border rounded-2xl px-4 py-3 text-sm" placeholder="eastus"/>
+      </div>
+      <div>
+        <label class="block text-sm font-medium mb-1">Document Intelligence Endpoint</label>
+        <input id="doc_endpoint" type="text" class="w-full border rounded-2xl px-4 py-3 text-sm"/>
+      </div>
+      <div>
+        <label class="block text-sm font-medium mb-1">Document Intelligence Key</label>
+        <input id="doc_key" type="password" class="w-full border rounded-2xl px-4 py-3 text-sm"/>
+      </div>
+      <div>
+        <label class="block text-sm font-medium mb-1">Text Analytics Endpoint</label>
+        <input id="text_analytics_endpoint" type="text" class="w-full border rounded-2xl px-4 py-3 text-sm"/>
+      </div>
+      <div>
+        <label class="block text-sm font-medium mb-1">Text Analytics Key</label>
+        <input id="text_analytics_key" type="password" class="w-full border rounded-2xl px-4 py-3 text-sm"/>
+      </div>
+    </div>
+    <button onclick="saveConfig()" 
+            class="mt-8 w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white py-4 rounded-2xl font-semibold text-lg transition-all">
+      Save All Configurations
+    </button>
+  </div>
+
+  <!-- Tabs -->
+  <div class="flex border-b border-gray-200 mb-8 bg-white rounded-3xl p-1 shadow">
+    <button onclick="openTab(0)" class="tab-btn flex-1 py-4 font-semibold rounded-3xl active">📸 Image Analyzer</button>
+    <button onclick="openTab(1)" class="tab-btn flex-1 py-4 font-semibold rounded-3xl">🌐 Translator</button>
+    <button onclick="openTab(2)" class="tab-btn flex-1 py-4 font-semibold rounded-3xl">📄 Document Scanner</button>
+    <button onclick="openTab(3)" class="tab-btn flex-1 py-4 font-semibold rounded-3xl">⭐ Review Analyzer</button>
+  </div>
+
+   <!-- Tab 1: Image Analyzer -->
+  <div id="tab0" class="tab-content active">
+    <div class="bg-white rounded-2xl shadow p-8">
+      <h3 class="text-2xl font-semibold mb-4">Upload Photo or Take Picture</h3>
+      <input type="file" id="imageInput" accept="image/*" class="mb-4"/>
+      <button onclick="analyzeImage()" class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-xl">Analyze Image</button>
+      
+      <div id="imagePreview" class="mt-6 hidden"></div>
+      <div id="visionResult" class="mt-6 bg-gray-50 p-6 rounded-xl min-h-[200px]"></div>
+    </div>
+  </div>
+
+  <!-- Tab 2: Translator -->
+  <div id="tab1" class="tab-content">
+    <div class="bg-white rounded-2xl shadow p-8">
+      <textarea id="translateInput" rows="4" class="w-full border rounded-xl p-4" placeholder="Enter text to translate..."></textarea>
+      <div class="flex gap-4 mt-4">
+        <select id="toLanguage" class="border rounded-lg px-4 py-2">
+          <option value="hi">Hindi</option>
+          <option value="en">English</option>
+          <option value="fr">French</option>
+          <option value="es">Spanish</option>
+          <option value="de">German</option>
+        </select>
+        <button onclick="translateText()" class="bg-indigo-600 text-white px-8 py-3 rounded-xl">Translate</button>
+        <button onclick="speakText()" class="bg-purple-600 text-white px-6 py-3 rounded-xl flex items-center gap-2">
+          <i class="fas fa-volume-up"></i> Speak
+        </button>
+      </div>
+      <div id="translateResult" class="mt-6 bg-gray-50 p-6 rounded-xl min-h-[150px]"></div>
+    </div>
+  </div>
+
+  <!-- Tab 3: Document Scanner -->
+<div id="tab2" class="tab-content">
+  <div class="bg-white rounded-2xl shadow p-8">
+    <h3 class="text-2xl font-semibold mb-4">📄 Upload Travel Document</h3>
+    <p class="text-gray-500 mb-4">Tickets, Hotel Bookings, Invoices, etc.</p>
+    <input type="file" id="docInput" accept=".pdf,.jpg,.png,.jpeg" class="mb-4"/>
+    <button onclick="analyzeDocument()" class="bg-amber-600 hover:bg-amber-700 text-white px-6 py-3 rounded-xl">
+      Extract Information
+    </button>
+    <div id="docResult" class="mt-6 bg-gray-50 p-6 rounded-xl min-h-[300px] whitespace-pre-wrap"></div>
+  </div>
+</div>
+
+<!-- Tab 4: Review Analyzer -->
+<div id="tab3" class="tab-content">
+  <div class="bg-white rounded-2xl shadow p-8">
+    <h3 class="text-2xl font-semibold mb-4">⭐ Hotel / Restaurant Review Analyzer</h3>
+    <textarea id="reviewInput" rows="6" class="w-full border rounded-xl p-4" placeholder="Paste reviews here..."></textarea>
+    <button onclick="analyzeReview()" class="mt-4 bg-rose-600 hover:bg-rose-700 text-white px-6 py-3 rounded-xl">
+      Analyze Sentiment & Key Points
+    </button>
+    <div id="reviewResult" class="mt-6 bg-gray-50 p-6 rounded-xl min-h-[300px]"></div>
+  </div>
+</div>
+
+<script>
+// Save Configuration
+async function saveConfig() {
+  const config = {
+    vision_endpoint: document.getElementById('vision_endpoint').value.trim(),
+    vision_key: document.getElementById('vision_key').value.trim(),
+    translator_key: document.getElementById('translator_key').value.trim(),
+    speech_key: document.getElementById('speech_key').value.trim(),
+    speech_region: document.getElementById('speech_region').value.trim(),
+    doc_endpoint: document.getElementById('doc_endpoint').value.trim(),
+    doc_key: document.getElementById('doc_key').value.trim(),
+    text_analytics_endpoint: document.getElementById('text_analytics_endpoint').value.trim(),
+    text_analytics_key: document.getElementById('text_analytics_key').value.trim(),
+  };
+
+  try {
+    const res = await fetch('/config', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(config)
+    });
+    const data = await res.json();
+    alert(data.status === 'success' ? '✅ Configuration Saved Successfully!' : '❌ Failed to save config');
+  } catch(e) {
+    alert('Error saving config: ' + e.message);
+  }
+}
+
+// Tab Switching
+function openTab(n) {
+  document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach((el, i) => {
+    if(i === n) {
+      el.classList.add('active', 'border-b-2', 'border-indigo-600', 'text-indigo-600');
+    } else {
+      el.classList.remove('active', 'border-b-2', 'border-indigo-600', 'text-indigo-600');
+    }
+  });
+  document.getElementById('tab' + n).classList.add('active');
+}
+
+// Image Analysis
+async function analyzeImage() {
+  const file = document.getElementById('imageInput').files[0];
+  if (!file) return alert("Please select an image");
+
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    document.getElementById('imagePreview').innerHTML = 
+      `<img src="${e.target.result}" class="max-h-96 rounded-xl mx-auto shadow"/>`;
+    document.getElementById('imagePreview').classList.remove('hidden');
+  };
+  reader.readAsDataURL(file);
+
+  const formData = new FormData();
+  formData.append('image', file);
+
+  try {
+    const res = await fetch('/analyze-image', { method: 'POST', body: formData });
+    const data = await res.json();
+
+    let html = `<h4 class="font-semibold text-lg mb-3">📝 Analysis Result:</h4>`;
+    html += `<p><strong>Caption:</strong> ${data.caption || 'N/A'}</p>`;
+    if (data.text_extracted && data.text_extracted.length > 0) {
+      html += `<p class="mt-3"><strong>Extracted Text:</strong></p><ul class="list-disc pl-5">`;
+      data.text_extracted.forEach(text => html += `<li>${text}</li>`);
+      html += `</ul>`;
+    }
+    document.getElementById('visionResult').innerHTML = html;
+  } catch(e) {
+    document.getElementById('visionResult').innerHTML = `<p class="text-red-600">Error: ${e.message}</p>`;
+  }
+}
+
+// Translator
+async function translateText() {
+  const text = document.getElementById('translateInput').value.trim();
+  if (!text) return alert("Please enter some text");
+
+  const toLang = document.getElementById('toLanguage').value;
+
+  try {
+    const res = await fetch('/translate', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ text: text, to: toLang })
+    });
+    const data = await res.json();
+
+    document.getElementById('translateResult').innerHTML = `
+      <p><strong>Original:</strong> ${data.original}</p>
+      <p class="mt-4"><strong>Translated (${data.to}):</strong> ${data.translated}</p>
+    `;
+  } catch(e) {
+    alert("Translation failed: " + e.message);
+  }
+}
+
+async function speakText() {
+  const text = document.getElementById('translateResult').innerText || 
+               document.getElementById('translateInput').value;
+  
+  if (!text) return alert("Nothing to speak!");
+
+  try {
+    const res = await fetch('/speak', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ text: text })
+    });
+    
+    const data = await res.json();
+    
+    if (data.error) {
+      alert("Speech Error: " + data.error);
+      return;
+    }
+
+    // Play the audio
+    const audio = new Audio('data:audio/wav;base64,' + data.audio);
+    audio.play();
+    
+  } catch(e) {
+    alert("Failed to generate speech: " + e.message);
+  }
+}
+
+async function analyzeDocument() {
+  const file = document.getElementById('docInput').files[0];
+  if (!file) return alert("Please select a document");
+
+  const formData = new FormData();
+  formData.append('document', file);
+
+  try {
+    const res = await fetch('/analyze-document', { 
+      method: 'POST', 
+      body: formData 
+    });
+    const data = await res.json();
+
+    let html = `<h4 class="font-semibold text-lg mb-3">📋 Extracted Information:</h4>`;
+
+    if (data.key_value_pairs && data.key_value_pairs.length > 0) {
+      html += `<h5 class="font-medium mt-4">Key Fields:</h5><ul class="list-disc pl-5">`;
+      data.key_value_pairs.forEach(item => {
+        html += `<li><strong>${item.key}:</strong> ${item.value}</li>`;
+      });
+      html += `</ul>`;
+    }
+
+    if (data.content) {
+      html += `<h5 class="font-medium mt-4">Full Text:</h5><p class="text-sm text-gray-700 bg-white p-4 rounded">${data.content}</p>`;
+    }
+
+    document.getElementById('docResult').innerHTML = html;
+  } catch(e) {
+    document.getElementById('docResult').innerHTML = `<p class="text-red-600">Error: ${e.message}</p>`;
+  }
+}
+
+async function analyzeReview() {
+  const text = document.getElementById('reviewInput').value.trim();
+  if (!text) return alert("Please paste some reviews");
+
+  try {
+    const res = await fetch('/analyze-review', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ text: text })
+    });
+    const data = await res.json();
+
+    let html = `<h4 class="font-semibold text-lg mb-3">📊 Analysis Result:</h4>`;
+    html += `<p><strong>Overall Sentiment:</strong> <span class="capitalize font-bold ${data.sentiment === 'positive' ? 'text-green-600' : data.sentiment === 'negative' ? 'text-red-600' : 'text-yellow-600'}">${data.sentiment}</span></p>`;
+    
+    html += `<p class="mt-2">Confidence: Positive ${data.confidence.positive} | Neutral ${data.confidence.neutral} | Negative ${data.confidence.negative}</p>`;
+
+    if (data.key_phrases && data.key_phrases.length > 0) {
+      html += `<h5 class="font-medium mt-4">Key Phrases:</h5><div class="flex flex-wrap gap-2 mt-2">`;
+      data.key_phrases.forEach(phrase => {
+        html += `<span class="bg-white px-3 py-1 rounded-full text-sm">${phrase}</span>`;
+      });
+      html += `</div>`;
+    }
+
+    document.getElementById('reviewResult').innerHTML = html;
+  } catch(e) {
+    document.getElementById('reviewResult').innerHTML = `<p class="text-red-600">Error: ${e.message}</p>`;
+  }
+}
+
+</script>
+
+</body>
+</html>

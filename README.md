@@ -13,11 +13,11 @@ A powerful **Azure AI** based real-time travel assistant built by a beginner dev
 ## 🛠 Technologies Used
 
 - **Azure AI Services**:
-- **Azure AI Vision (Image Analysis)**
-- **Azure AI Translator**
-- **Azure AI Speech (Text-to-Speech)**
-- **Azure AI Document Intelligence**
-- **Azure AI Text Analytics**
+  - Azure AI Vision (Image Analysis)
+  - Azure AI Translator
+  - Azure AI Speech (Text-to-Speech)
+  - Azure AI Document Intelligence
+  - Azure AI Text Analytics
 
 - **Backend**: Python + Flask
 - **Frontend**: HTML, Tailwind CSS, JavaScript

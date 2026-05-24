@@ -13,11 +13,11 @@ A powerful **Azure AI** based real-time travel assistant built by a beginner dev
 ## 🛠 Technologies Used
 
 - **Azure AI Services**:
-  - Azure AI Vision (Image Analysis)
-  - Azure AI Translator
-  - Azure AI Speech (Text-to-Speech)
-  - Azure AI Document Intelligence
-  - Azure AI Text Analytics
+- **Azure AI Vision (Image Analysis)**
+- **Azure AI Translator**
+- **Azure AI Speech (Text-to-Speech)**
+- **Azure AI Document Intelligence**
+- **Azure AI Text Analytics**
 
 - **Backend**: Python + Flask
 - **Frontend**: HTML, Tailwind CSS, JavaScript
@@ -28,4 +28,12 @@ A powerful **Azure AI** based real-time travel assistant built by a beginner dev
 2. Create virtual environment:
    ```bash
    python -m venv venv
-   venv\Scripts\activate 
+   venv\Scripts\activate
+3. Install dependencies:
+   ```bash
+   pip install flask azure-ai-vision-imageanalysis azure-ai-translation-text azure-cognitiveservices-speech azure-ai-documentintelligence azure-ai-textanalytics pillow requests
+4. Run the application:
+   ```bash
+   python app.py
+5. Open your browser and go to: ```http://127.0.0.1:5000```
+6. Paste your Azure service Endpoints and Keys in the configuration section and click "Save Configuration".
